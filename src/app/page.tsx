@@ -120,7 +120,7 @@ const Suggestions = ({ onSuggestionClick, isVisible }: { onSuggestionClick: (sug
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-full mt-2 w-full bg-custom-blue backdrop-blur-xl border border-slate-700/50 rounded-xl p-4 shadow-2xl z-10"
+                    className="absolute top-full mt-2 w-full bg-black/90 backdrop-blur-xl border border-slate-700/50 rounded-xl p-4 shadow-2xl z-10"
                 >
                     <div className="flex items-center gap-2 mb-3">
                         <Lightbulb className="w-4 h-4 text-fuchsia-400" />
