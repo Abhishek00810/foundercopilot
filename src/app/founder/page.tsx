@@ -11,41 +11,30 @@ import {
     Filter, Download, RefreshCw, Heart, Share2, Bookmark
 } from 'lucide-react';
 
-// Space black theme with cleaner colors
+// ... (all your interfaces and color definitions remain the same)
+
 const colors = {
-    // Backgrounds
     bg: 'bg-black',
     cardBg: 'bg-zinc-950',
     hoverBg: 'bg-zinc-900',
-    
-    // Borders
     border: 'border-zinc-800',
     borderLight: 'border-zinc-700',
-    
-    // Text
     text: 'text-white',
     textSecondary: 'text-zinc-400',
     textMuted: 'text-zinc-600',
-    
-    // Accent colors (Next.js style)
     primary: 'text-blue-500',
     primaryBg: 'bg-blue-500',
     primaryHover: 'hover:bg-blue-600',
-    
     success: 'text-emerald-400',
     successBg: 'bg-emerald-500',
     successHover: 'hover:bg-emerald-600',
-    
     warning: 'text-yellow-400',
     warningBg: 'bg-yellow-500',
-    
-    // Interactive elements
     buttonPrimary: 'bg-blue-500 hover:bg-blue-600 text-white',
     buttonSecondary: 'bg-zinc-800 hover:bg-zinc-700 text-white border border-zinc-700',
     buttonGhost: 'hover:bg-zinc-900 text-zinc-400 hover:text-white'
 };
 
-// Enhanced TypeScript interfaces
 interface UserProfile {
     name: string;
     signature: string;
@@ -79,25 +68,7 @@ interface RecentActivity {
     status: 'success' | 'pending' | 'failed';
 }
 
-// Enhanced mock data
-const founderData: FounderData = {
-    name: 'Elena Rodriguez',
-    firstName: 'Elena',
-    title: 'CEO & Co-founder',
-    company: 'SynthWave AI',
-    avatarUrl: 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
-    linkedin: 'https://linkedin.com/in/elena',
-    twitter: 'https://twitter.com/elena',
-    location: 'San Francisco, CA',
-    founded: '2022',
-    confidence: 92,
-    revenue: '$2.5M ARR',
-    employees: '25-50',
-    lastFunding: 'Series A - $15M',
-    industry: 'AI/ML'
-};
-
-
+// Static data
 const userProfile: UserProfile = {
     name: 'Alex Chen',
     signature: 'Best regards,\nAlex Chen\nSenior Account Executive\nDevTools Pro',
@@ -161,7 +132,177 @@ Would you be open to a brief 15-minute chat next week? I think there's a compell
     }
 };
 
-// Enhanced Components
+// Fixed HomeLoadingScreen - removed Math.random()
+const HomeLoadingScreen = () => {
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Static positions to avoid hydration mismatch
+    const floatingDots = [
+        { left: 20, top: 30 },
+        { left: 80, top: 70 },
+        { left: 60, top: 20 },
+        { left: 15, top: 80 },
+        { left: 90, top: 40 },
+        { left: 50, top: 60 }
+    ];
+
+    if (!mounted) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center">
+                <div className="text-white">Loading...</div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+            {/* Background effects */}
+            <div className="absolute inset-0">
+                <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/3 rounded-full blur-3xl animate-pulse"></div>
+            </div>
+
+            {/* Main loading content */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="relative z-10 flex flex-col items-center"
+            >
+                {/* Logo */}
+                <motion.div
+                    className="relative mb-8"
+                    animate={{ 
+                        scale: [1, 1.05, 1],
+                        rotate: [0, 1, -1, 0]
+                    }}
+                    transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                >
+                    <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-emerald-500/20 rounded-full animate-spin-slow"></div>
+                    <div className="absolute -inset-2 bg-blue-500/10 rounded-full blur-sm animate-pulse"></div>
+                    <div className="relative p-6 bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl">
+                        <Sparkles size={48} className="text-blue-400" />
+                    </div>
+                </motion.div>
+
+                {/* Loading text */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6 }}
+                    className="text-center mb-6"
+                >
+                    <h2 className="text-2xl font-bold text-white mb-2">
+                        AI Outreach Studio
+                    </h2>
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6, duration: 0.6 }}
+                        className="text-zinc-400"
+                    >
+                        Analyzing prospect data...
+                    </motion.p>
+                </motion.div>
+
+                {/* Progress bar */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8, duration: 0.4 }}
+                    className="w-64 mb-8"
+                >
+                    <div className="h-2 bg-zinc-900 rounded-full overflow-hidden">
+                        <motion.div
+                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                            initial={{ width: "0%" }}
+                            animate={{ width: "100%" }}
+                            transition={{
+                                delay: 1,
+                                duration: 2,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    </div>
+                </motion.div>
+
+                {/* Loading steps */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.2, duration: 0.6 }}
+                    className="text-center space-y-2"
+                >
+                    {[
+                        { text: "Scraping founder data", delay: 0 },
+                        { text: "Processing AI insights", delay: 1000 },
+                        { text: "Generating email content", delay: 2000 }
+                    ].map((step, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: [0, 1, 0.6] }}
+                            transition={{
+                                delay: step.delay / 1000 + 1.5,
+                                duration: 0.8,
+                                repeat: Infinity,
+                                repeatType: "loop"
+                            }}
+                            className="flex items-center gap-3 text-sm text-zinc-500 justify-center"
+                        >
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ 
+                                    duration: 1,
+                                    repeat: Infinity,
+                                    ease: "linear"
+                                }}
+                                className="w-4 h-4 border-2 border-zinc-700 border-t-blue-400 rounded-full"
+                            />
+                            <span>{step.text}</span>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
+                {/* Static floating dots */}
+                <div className="absolute inset-0 pointer-events-none">
+                    {floatingDots.map((dot, i) => (
+                        <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
+                            style={{
+                                left: `${dot.left}%`,
+                                top: `${dot.top}%`,
+                            }}
+                            animate={{
+                                y: [-20, -40, -20],
+                                opacity: [0, 1, 0],
+                                scale: [0, 1, 0]
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                delay: i * 0.5,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    ))}
+                </div>
+            </motion.div>
+        </div>
+    );
+};
+
+// ... (keep all other components exactly the same)
 
 const Header = () => (
     <div className={`fixed top-0 left-0 right-0 z-50 ${colors.bg} ${colors.border} border-b`}>
@@ -204,637 +345,97 @@ const Header = () => (
     </div>
 );
 
+// ... (keep all other components: ActivityFeed, FounderVerification, etc.)
 
-// Enhanced Loading Component
-const HomeLoadingScreen = () => (
-    <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
-        {/* Animated background effects */}
-        <div className="absolute inset-0">
-            <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
-
-        {/* Main loading content */}
-        <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative z-10 flex flex-col items-center"
-        >
-            {/* Logo/Icon with pulse animation */}
-            <motion.div
-                className="relative mb-8"
-                animate={{ 
-                    scale: [1, 1.05, 1],
-                    rotate: [0, 1, -1, 0]
-                }}
-                transition={{ 
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            >
-                {/* Outer ring */}
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-emerald-500/20 rounded-full animate-spin-slow"></div>
-                
-                {/* Inner glow */}
-                <div className="absolute -inset-2 bg-blue-500/10 rounded-full blur-sm animate-pulse"></div>
-                
-                {/* Main icon container */}
-                <div className="relative p-6 bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl">
-                    <Sparkles size={48} className="text-blue-400" />
-                </div>
-            </motion.div>
-
-            {/* Loading text with typewriter effect */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-center mb-6"
-            >
-                <h2 className="text-2xl font-bold text-white mb-2">
-                    AI Outreach Studio
-                </h2>
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.6 }}
-                    className="text-zinc-400"
-                >
-                    Initializing AI-powered insights...
-                </motion.p>
-            </motion.div>
-
-            {/* Progress bar */}
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.4 }}
-                className="w-64 mb-8"
-            >
-                <div className="h-2 bg-zinc-900 rounded-full overflow-hidden">
-                    <motion.div
-                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                        initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
-                        transition={{
-                            delay: 1,
-                            duration: 2,
-                            ease: "easeInOut",
-                            repeat: Infinity
-                        }}
-                    />
-                </div>
-            </motion.div>
-
-            {/* Loading steps */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2, duration: 0.6 }}
-                className="text-center space-y-2"
-            >
-                {[
-                    { text: "Loading AI models", delay: 0 },
-                    { text: "Preparing insights engine", delay: 1000 },
-                    { text: "Setting up workspace", delay: 2000 }
-                ].map((step, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: [0, 1, 0.6] }}
-                        transition={{
-                            delay: step.delay / 1000 + 1.5,
-                            duration: 0.8,
-                            repeat: Infinity,
-                            repeatType: "loop"
-                        }}
-                        className="flex items-center gap-3 text-sm text-zinc-500 justify-center"
-                    >
-                        <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ 
-                                duration: 1,
-                                repeat: Infinity,
-                                ease: "linear",
-                                delay: step.delay / 1000 + 1.5
-                            }}
-                            className="w-4 h-4 border-2 border-zinc-700 border-t-blue-400 rounded-full"
-                        />
-                        <span>{step.text}</span>
-                    </motion.div>
-                ))}
-            </motion.div>
-
-            {/* Subtle floating dots */}
-            <div className="absolute inset-0 pointer-events-none">
-                {[...Array(6)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute w-1 h-1 bg-blue-400/30 rounded-full"
-                        style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                        }}
-                        animate={{
-                            y: [-20, -40, -20],
-                            opacity: [0, 1, 0],
-                            scale: [0, 1, 0]
-                        }}
-                        transition={{
-                            duration: 3,
-                            repeat: Infinity,
-                            delay: i * 0.5,
-                            ease: "easeInOut"
-                        }}
-                    />
-                ))}
-            </div>
-        </motion.div>
-
-        {/* Bottom fade effect */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent pointer-events-none" />
-    </div>
-);
-
-// Custom CSS for slow spin animation
-const LoadingStyles = () => (
-    <style jsx global>{`
-        @keyframes spin-slow {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        
-        .animate-spin-slow {
-            animation: spin-slow 8s linear infinite;
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
-            }
-        }
-        
-        .animate-pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-    `}</style>
-);
-const ActivityFeed = () => (
-    <div className={`${colors.cardBg} rounded-xl p-6 ${colors.border} border`}>
-        <div className="flex items-center justify-between mb-6">
-            <h3 className={`text-lg font-semibold ${colors.text} flex items-center gap-3`}>
-                <Clock size={18} className={colors.primary} />
-                Recent Activity
-            </h3>
-            <button className={`${colors.buttonGhost} p-1 rounded transition-all`}>
-                <Eye size={14} />
-            </button>
-        </div>
-        <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
-                <motion.div
-                    key={activity.id}
-                    className={`flex items-center gap-4 p-3 rounded-lg ${colors.hoverBg} transition-all cursor-pointer`}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
-                >
-                    <div className={`p-2 rounded-lg ${
-                        activity.type === 'meeting_booked' ? 'bg-emerald-500/10 text-emerald-400' :
-                        activity.type === 'reply_received' ? 'bg-blue-500/10 text-blue-400' :
-                        'bg-yellow-500/10 text-yellow-400'
-                    }`}>
-                        {activity.type === 'meeting_booked' ? <Calendar size={14} /> :
-                         activity.type === 'reply_received' ? <MessageSquare size={14} /> :
-                         <Mail size={14} />}
-                    </div>
-                    <div className="flex-1">
-                        <p className={`text-sm font-medium ${colors.text}`}>{activity.prospect}</p>
-                        <p className={`text-xs ${colors.textSecondary}`}>{activity.timestamp}</p>
-                    </div>
-                    <div className={`w-2 h-2 rounded-full ${
-                        activity.status === 'success' ? 'bg-emerald-400' :
-                        activity.status === 'pending' ? 'bg-yellow-400' :
-                        'bg-red-400'
-                    }`}></div>
-                </motion.div>
-            ))}
-        </div>
-    </div>
-);
-
-const FounderVerification = ({ founder, onConfirm, onSearch }: { 
-    founder: FounderData; 
-    onConfirm: () => void; 
-    onSearch: () => void 
-}) => (
-    <motion.div
-        className={`${colors.cardBg} rounded-xl p-6 ${colors.border} border`}
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: 'spring', stiffness: 300 }}
-    >
-        <div className="flex items-start justify-between mb-6">
-            <h3 className={`text-lg font-semibold ${colors.text} flex items-center gap-3`}>
-                <User size={18} className={colors.primary} />
-                Prospect Verification
-            </h3>
-            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full">
-                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
-                <span className="text-xs text-emerald-400 font-medium">{founder.confidence}% match</span>
-            </div>
-        </div>
-
-        <div className="flex items-start gap-4 mb-6">
-            <div className="relative">
-                <img 
-                    src={founder.avatarUrl} 
-                    alt={founder.name} 
-                    className="w-16 h-16 rounded-xl object-cover" 
-                />
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
-                    <CheckCircle size={12} className="text-white" />
-                </div>
-            </div>
-            <div className="flex-1">
-                <h4 className={`text-xl font-bold ${colors.text} mb-1`}>{founder.name}</h4>
-                <p className={`${colors.textSecondary} mb-2`}>{founder.title}</p>
-                <div className={`flex items-center gap-4 text-sm ${colors.textMuted}`}>
-                    <span className="flex items-center gap-1">
-                        <Building size={12} />
-                        {founder.company}
-                    </span>
-                    <span className="flex items-center gap-1">
-                        <MapPin size={12} />
-                        {founder.location}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className={`${colors.bg} rounded-lg p-4`}>
-                <p className={`text-xs ${colors.textMuted} mb-1`}>Revenue</p>
-                <p className={`text-sm font-semibold ${colors.success}`}>{founder.revenue}</p>
-            </div>
-            <div className={`${colors.bg} rounded-lg p-4`}>
-                <p className={`text-xs ${colors.textMuted} mb-1`}>Last Funding</p>
-                <p className={`text-sm font-semibold ${colors.primary}`}>{founder.lastFunding}</p>
-            </div>
-        </div>
-
-        <div className="flex gap-3">
-            <motion.button
-                onClick={onConfirm}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 ${colors.buttonPrimary} text-sm rounded-lg font-medium transition-all`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-            >
-                <CheckCircle size={16} />
-                Confirm & Continue
-            </motion.button>
-            <motion.button
-                onClick={onSearch}
-                className={`px-4 py-3 ${colors.buttonSecondary} text-sm rounded-lg font-medium transition-all`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-            >
-                <Search size={16} />
-            </motion.button>
-        </div>
-    </motion.div>
-);
-
-const FounderConfirmed = ({ founder, onEdit }: { founder: FounderData; onEdit: () => void }) => (
-    
-    <motion.div
-        className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ type: 'spring', stiffness: 300 }}
-    >
-        <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-                <CheckCircle className="text-emerald-400" size={24} />
-                <div>
-                    <p className={`font-bold ${colors.text} text-lg`}>{founder.name}</p>
-                    <p className="text-emerald-400">{founder.company} • {founder.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                        <span className="text-xs text-emerald-300">Ready for outreach</span>
-                    </div>
-                </div>
-            </div>
-            <button 
-                onClick={onEdit}
-                className={`p-2 text-emerald-300 ${colors.buttonGhost} rounded transition-all`}
-            >
-                <Edit size={16} />
-            </button>
-        </div>
-    </motion.div>
-);
-
-const InitialStateDisplay = () => (
-    <div className="w-full h-full flex flex-col items-center justify-center text-center p-8">
-        <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col items-center max-w-lg"
-        >
-            <div className={`p-8 ${colors.cardBg} rounded-2xl ${colors.border} border mb-8`}>
-                <UserCheck size={48} className={colors.primary} />
-            </div>
-            
-            <h2 className={`text-3xl font-bold ${colors.text} mb-4`}>
-                Verify Your Prospect
-            </h2>
-            <p className={`text-lg ${colors.textSecondary} mb-8 leading-relaxed`}>
-                Confirm the founder details to unlock AI-powered insights and generate a personalized outreach email that converts.
-            </p>
-            
-            <div className={`flex items-center gap-6 text-sm ${colors.textMuted}`}>
-                <div className="flex items-center gap-2">
-                    <Brain size={16} className={colors.primary} />
-                    <span>AI Analysis</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Zap size={16} className={colors.warning} />
-                    <span>Smart Insights</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Target size={16} className={colors.success} />
-                    <span>High Conversion</span>
-                </div>
-            </div>
-        </motion.div>
-    </div>
-);
-
-const EmailDisplay = ({ email, getRenderedEmailBody }: { 
-    email: { subject: string, body: string }; 
-    getRenderedEmailBody: (body: string) => string 
-}) => (
-    <div className="h-full flex flex-col">
-        {/* Header */}
-        <div className={`${colors.border} border-b p-6 ${colors.cardBg}`}>
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className={`text-2xl font-bold ${colors.text} mb-1`}>{email.subject}</h2>
-                    <div className={`flex items-center gap-4 text-sm ${colors.textSecondary}`}>
-                        <span>To: {founderData.name} ({founderData.title})</span>
-                        <div className="flex items-center gap-1">
-                            <Eye size={12} />
-                            <span>Preview Mode</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/10 rounded-full">
-                    <Brain size={12} className={colors.primary} />
-                    <span className={`text-xs ${colors.primary} font-medium`}>AI Generated</span>
-                </div>
-            </div>
-        </div>
-
-        {/* Email Content */}
-        <div className="flex-1 overflow-y-auto p-8">
-            <div className="max-w-4xl mx-auto">
-                <motion.div
-                    className="bg-white text-slate-800 rounded-xl shadow-xl overflow-hidden"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                >
-                    <div className="p-8">
-                        <div className="whitespace-pre-wrap text-slate-700 leading-relaxed text-lg">
-                            {getRenderedEmailBody(email.body)}
-                        </div>
-                    </div>
-                    
-                    <div className="bg-slate-50 px-8 py-4 border-t border-slate-200">
-                        <div className="flex items-center justify-between text-sm text-slate-500">
-                            <span>Sent via AI Outreach Studio</span>
-                            <div className="flex items-center gap-3">
-                                <button className="hover:text-slate-700 transition-colors">
-                                    <Bookmark size={14} />
-                                </button>
-                                <button className="hover:text-slate-700 transition-colors">
-                                    <Share2 size={14} />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
-            </div>
-        </div>
-
-        {/* Action Bar */}
-        <div className={`${colors.border} border-t ${colors.cardBg} p-6`}>
-            <div className="flex items-center justify-between max-w-4xl mx-auto">
-                <div className="flex items-center gap-6">
-                    <div className={`flex items-center gap-2 text-sm ${colors.textSecondary}`}>
-                        <MousePointer size={14} />
-                        <span>Expected open rate: <span className={colors.success}>74%</span></span>
-                    </div>
-                    <div className={`flex items-center gap-2 text-sm ${colors.textSecondary}`}>
-                        <Target size={14} />
-                        <span>Reply probability: <span className={colors.primary}>28%</span></span>
-                    </div>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                    <motion.button
-                        onClick={() => {
-                            navigator.clipboard.writeText(getRenderedEmailBody(email.body));
-                            toast.success("Email copied to clipboard!", { icon: '📋' });
-                        }}
-                        className={`flex items-center gap-2 px-4 py-2 ${colors.buttonSecondary} text-sm rounded-lg font-medium transition-all`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        <Copy size={14} />
-                        Copy
-                    </motion.button>
-                    
-                    <motion.button
-                        className={`flex items-center gap-2 px-4 py-2 ${colors.buttonSecondary} text-sm rounded-lg font-medium transition-all`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        <Download size={14} />
-                        Export
-                    </motion.button>
-                    
-                    <motion.a
-                        href={`mailto:${founderData.name}?subject=${encodeURIComponent(email.subject)}&body=${encodeURIComponent(getRenderedEmailBody(email.body))}`}
-                        className={`flex items-center gap-2 px-6 py-2 ${colors.buttonPrimary} text-sm rounded-lg font-medium transition-all shadow-lg`}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        <Send size={14} />
-                        Send Email
-                    </motion.a>
-                </div>
-            </div>
-        </div>
-    </div>
-);
-
-const TalkingPoint = ({ 
-    icon, 
-    text, 
-    confidence, 
-    priority, 
-    onInsert 
-}: { 
-    icon: React.ReactNode;
-    text: string;
-    confidence: number;
-    priority: 'high' | 'medium' | 'low';
-    onInsert: () => void;
-}) => (
-    <motion.div
-        onClick={onInsert}
-        className={`group cursor-pointer rounded-xl transition-all duration-200 ${
-            priority === 'high' 
-                ? `${colors.cardBg} ${colors.border} border hover:${colors.hoverBg} hover:border-emerald-500/50` 
-                : `${colors.cardBg} ${colors.border} border hover:${colors.hoverBg}`
-        }`}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-    >
-        <div className="p-4">
-            <div className="flex items-start gap-4">
-                <div className={`flex-shrink-0 p-2 rounded-lg transition-all ${
-                    priority === 'high' 
-                        ? 'bg-emerald-500/10 text-emerald-400' 
-                        : 'bg-zinc-800 text-zinc-400 group-hover:bg-blue-500 group-hover:text-white'
-                }`}>
-                    {icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                            priority === 'high' 
-                                ? 'bg-emerald-500/10 text-emerald-400' 
-                                : priority === 'medium'
-                                ? 'bg-blue-500/10 text-blue-400'
-                                : 'bg-zinc-500/10 text-zinc-400'
-                        }`}>
-                            {priority.toUpperCase()}
-                        </span>
-                        <div className="flex items-center gap-1">
-                            <Star size={10} className={colors.warning} />
-                            <span className={`text-xs ${colors.textMuted}`}>{confidence}%</span>
-                        </div>
-                    </div>
-                    <p className={`${colors.textSecondary} text-sm leading-relaxed group-hover:${colors.text} transition-colors`}>
-                        {text}
-                    </p>
-                    <div className="flex items-center justify-between mt-3">
-                        <span className={`text-xs ${colors.textMuted}`}>Click to add to email</span>
-                        <ChevronRight size={12} className={`${colors.textMuted} group-hover:${colors.text} transition-colors`} />
-                    </div>
-                </div>
-            </div>
-        </div>
-    </motion.div>
-);
-
-// Main App Component
+// Main App Component with proper API integration
 function App() {
     const [email, setEmail] = useState(aiAnalysis.initialEmail);
     const [talkingPoints] = useState(aiAnalysis.talkingPoints);
     const [isFounderConfirmed, setIsFounderConfirmed] = useState(false);
     const [loading, setLoading] = useState(false);
     const [HomeLoading, setHomeLoading] = useState(true);
-    const [FounderDataFinal, setFounderDataFinal] = useState<FounderData>({
-        name: 'Null',
-        firstName: 'Elena',
-        title: 'CEO & Co-founder',
-        company: 'SynthWave AI',
-        avatarUrl: 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
-        linkedin: 'https://linkedin.com/in/elena',
-        twitter: 'https://twitter.com/elena',
-        location: 'San Francisco, CA',
-        founded: '2022',
-        confidence: 92,
-        revenue: '$2.5M ARR',
-        employees: '25-50',
-        lastFunding: 'Series A - $15M',
-        industry: 'AI/ML'
-    });
+    const [FounderDataFinal, setFounderDataFinal] = useState<FounderData | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        async function sendPostRequest() {
-          try {
-            const res = await fetch('/api/scrape', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                query: 'SynthWave AI',
-              }),
-            });
-      
-            const data = await res.json();
-            
-            console.log('Response from POST:', data);
-            
-            setFounderDataFinal({
-                name: data.best_pick.name,
-                firstName: 'Elena',
-                title: data.best_pick.title,
-                company: data.company,
-                avatarUrl: 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
-                linkedin: 'https://linkedin.com/in/elena',
-                twitter: 'https://twitter.com/elena',
-                location: 'San Francisco, CA',
-                founded: '2022',
-                confidence: 92,
-                revenue: '$2.5M ARR',
-                employees: '25-50',
-                lastFunding: 'Series A - $15M',
-                industry: 'AI/ML'
-            })
-          } catch (err) {
-            console.error('POST request failed:', err);
-          }
-          finally{
-            setHomeLoading(false);
-          }
-        }
-      
-        sendPostRequest();
+        console.log("Rendered once");
       }, []);
       
-    
-    const getRenderedEmailBody = useCallback(
-        (body: string) =>
-            body
-                .replace(/{firstName}/g, founderData.firstName)
-                .replace(/{companyName}/g, founderData.company)
-                .replace(/{\[Signature\]}/g, userProfile.signature),
-        [userProfile.signature]
-    );
+    useEffect(() => {
+        async function fetchFounderData() {
+            try {
+                setError(null);
+                const res = await fetch('/api/scrape', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        company: 'Notion', // This should come from URL params or props
+                    }),
+                });
+
+                if (!res.ok) {
+                    throw new Error(`API Error: ${res.status}`);
+                }
+
+                const data = await res.json();
+
+                if (data.best_pick) {
+                    setFounderDataFinal(data.best_pick);
+                } else {
+                    throw new Error('Invalid API response');
+                }
+            } catch (err: any) {
+                console.error('❌ Failed to fetch founder data:', err);
+                setError(err.message);
+                // Set fallback data
+                setFounderDataFinal({
+                    name: 'No founded error',
+                    firstName: 'Ivan',
+                    title: 'CEO',
+                    company: 'Notion',
+                    avatarUrl: 'https://images.pexels.com/photos/3785077/pexels-photo-3785077.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop',
+                    linkedin: 'https://linkedin.com/in/ivan',
+                    twitter: 'https://twitter.com/ivan',
+                    location: 'San Francisco, CA',
+                    founded: '2016',
+                    confidence: 85,
+                    revenue: '$50M ARR',
+                    employees: '200-500',
+                    lastFunding: 'Series C - $50M',
+                    industry: 'Productivity'
+                });
+            } finally {
+                setHomeLoading(false);
+            }
+        }
+
+        fetchFounderData();
+    }, []);
+
+
+     const onConfirmfounder = async()=>{
+        const res = await fetch('/api/coldmail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                company: 'Notion', // This should come from URL params or props
+                founder: FounderDataFinal?.name
+            }),
+        });
+        const data = await res.json();
+        console.log(data.result)
+        setEmail(data.result)
+
+        setIsFounderConfirmed(true);
+    }
 
     const handleInsertSnippet = (snippet: string) => {
-        const newBody = `${email.body.trim()}\n\n${snippet.replace(/{companyName}/g, founderData.company)}`;
+        if (!FounderDataFinal) return;
+        const newBody = `${email.trim()}\n\n${snippet.replace(/{companyName}/g, FounderDataFinal.company)}`;
         setEmail({ ...email, body: newBody });
         toast.success('Insight added to email!', { 
             icon: '✨',
@@ -855,11 +456,11 @@ function App() {
         const variations = [
             {
                 subject: "Partnership opportunity for {companyName}",
-                body: `Hi {firstName},\n\nJust learned about {companyName}'s recent Series A success - what an incredible milestone!\n\nI work with fast-scaling AI companies to implement enterprise-grade security frameworks that grow with your team.\n\nGiven your rapid expansion, I think there's a meaningful opportunity to discuss.\n\nInterested in a quick call?\n\n{[Signature]}`
+                body: `Hi {firstName},\n\nJust learned about {companyName}'s recent success - what an incredible milestone!\n\nI work with fast-scaling companies to implement enterprise-grade security frameworks that grow with your team.\n\nGiven your rapid expansion, I think there's a meaningful opportunity to discuss.\n\nInterested in a quick call?\n\n{[Signature]}`
             },
             {
                 subject: "Scaling challenges at {companyName}?",
-                body: `Hi {firstName},\n\nImpressive work at {companyName} - your approach to AI development is exactly what the industry needs.\n\nAs you scale beyond 50 engineers, I imagine code review and deployment security are becoming critical bottlenecks.\n\nI help companies like yours automate these processes without slowing down innovation.\n\nWorth a 15-minute conversation?\n\n{[Signature]}`
+                body: `Hi {firstName},\n\nImpressive work at {companyName} - your approach to development is exactly what the industry needs.\n\nAs you scale, I imagine code review and deployment security are becoming critical bottlenecks.\n\nI help companies like yours automate these processes without slowing down innovation.\n\nWorth a 15-minute conversation?\n\n{[Signature]}`
             }
         ];
         
@@ -877,33 +478,51 @@ function App() {
         });
     };
 
+    // Show loading screen
+    if (HomeLoading) {
+        return (
+            <>
+                <style jsx global>{`
+                    @keyframes spin-slow {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    .animate-spin-slow {
+                        animation: spin-slow 8s linear infinite;
+                    }
+                `}</style>
+                <HomeLoadingScreen />
+            </>
+        );
+    }
 
-    return HomeLoading ? (
-        <>
-            <LoadingStyles />
-            <HomeLoadingScreen />
-        </>
-    ) : 
-    (
+    // Show error state
+    if (error || !FounderDataFinal) {
+        return (
+            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
+                    <p className="text-zinc-400 mb-6">{error || 'Failed to load founder data'}</p>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
         <div className={`min-h-screen ${colors.bg} ${colors.text} font-sans antialiased`}>
             <style jsx global>{`
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                :root {
-                    --font-sans: 'Inter', sans-serif;
-                }
-                ::-webkit-scrollbar {
-                    width: 6px;
-                }
-                ::-webkit-scrollbar-track {
-                    background: #000000;
-                }
-                ::-webkit-scrollbar-thumb {
-                    background: #27272a;
-                    border-radius: 3px;
-                }
-                ::-webkit-scrollbar-thumb:hover {
-                    background: #3f3f46;
-                }
+                :root { --font-sans: 'Inter', sans-serif; }
+                ::-webkit-scrollbar { width: 6px; }
+                ::-webkit-scrollbar-track { background: #000000; }
+                ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+                ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
             `}</style>
 
             <Toaster
@@ -920,7 +539,6 @@ function App() {
 
             <Header />
 
-            {/* Main Content */}
             <main className="flex h-screen pt-16">
                 {/* Sidebar */}
                 <div className={`w-100 flex-shrink-0 pl-4 ${colors.border} border-r overflow-y-auto`}>
@@ -935,16 +553,104 @@ function App() {
                                 transition={{ duration: 0.3 }}
                             >
                                 {isFounderConfirmed ? (
-                                    <FounderConfirmed 
-                                        founder={FounderDataFinal} 
-                                        onEdit={() => setIsFounderConfirmed(false)} 
-                                    />
+                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <CheckCircle className="text-emerald-400" size={24} />
+                                                <div>
+                                                    <p className={`font-bold ${colors.text} text-lg`}>{FounderDataFinal.name}</p>
+                                                    <p className="text-emerald-400">{FounderDataFinal.company} • {FounderDataFinal.title}</p>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                                                        <span className="text-xs text-emerald-300">Ready for outreach</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => setIsFounderConfirmed(false)}
+                                                className={`p-2 text-emerald-300 ${colors.buttonGhost} rounded transition-all`}
+                                            >
+                                                <Edit size={16} />
+                                            </button>
+                                        </div>
+                                    </div>
                                 ) : (
-                                    <FounderVerification
-                                        founder={FounderDataFinal}
-                                        onConfirm={() => setIsFounderConfirmed(true)}
-                                        onSearch={() => {}}
-                                    />
+                                    <motion.div
+                                        className={`${colors.cardBg} rounded-xl p-6 ${colors.border} border`}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ type: 'spring', stiffness: 300 }}
+                                    >
+                                        <div className="flex items-start justify-between mb-6">
+                                            <h3 className={`text-lg font-semibold ${colors.text} flex items-center gap-3`}>
+                                                <User size={18} className={colors.primary} />
+                                                Prospect Verification
+                                            </h3>
+                                            <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full">
+                                                <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
+                                                <span className="text-xs text-emerald-400 font-medium">{FounderDataFinal.confidence}% match</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex items-start gap-4 mb-6">
+                                            <div className="relative">
+                                                <img 
+                                                    src={FounderDataFinal.avatarUrl} 
+                                                    alt={FounderDataFinal.name} 
+                                                    className="w-16 h-16 rounded-xl object-cover" 
+                                                />
+                                                <div className="absolute -top-1 -right-1 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+                                                    <CheckCircle size={12} className="text-white" />
+                                                </div>
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className={`text-xl font-bold ${colors.text} mb-1`}>{FounderDataFinal.name}</h4>
+                                                <p className={`${colors.textSecondary} mb-2`}>{FounderDataFinal.title}</p>
+                                                <div className={`flex items-center gap-4 text-sm ${colors.textMuted}`}>
+                                                    <span className="flex items-center gap-1">
+                                                        <Building size={12} />
+                                                        {FounderDataFinal.company}
+                                                    </span>
+                                                    {FounderDataFinal.location && (
+                                                        <span className="flex items-center gap-1">
+                                                            <MapPin size={12} />
+                                                            {FounderDataFinal.location}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-2 gap-4 mb-6">
+                                            <div className={`${colors.bg} rounded-lg p-4`}>
+                                                <p className={`text-xs ${colors.textMuted} mb-1`}>Revenue</p>
+                                                <p className={`text-sm font-semibold ${colors.success}`}>{FounderDataFinal.revenue}</p>
+                                            </div>
+                                            <div className={`${colors.bg} rounded-lg p-4`}>
+                                                <p className={`text-xs ${colors.textMuted} mb-1`}>Last Funding</p>
+                                                <p className={`text-sm font-semibold ${colors.primary}`}>{FounderDataFinal.lastFunding}</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-3">
+                                            <motion.button
+                                                onClick={() => onConfirmfounder()}
+                                                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 ${colors.buttonPrimary} text-sm rounded-lg font-medium transition-all`}
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
+                                            >
+                                                <CheckCircle size={16} />
+                                                Confirm & Continue
+                                            </motion.button>
+                                            <motion.button
+                                                className={`px-4 py-3 ${colors.buttonSecondary} text-sm rounded-lg font-medium transition-all`}
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
+                                            >
+                                                <Search size={16} />
+                                            </motion.button>
+                                        </div>
+                                    </motion.div>
                                 )}
                             </motion.div>
                         </AnimatePresence>
@@ -979,13 +685,52 @@ function App() {
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ delay: index * 0.1 }}
                                                 >
-                                                    <TalkingPoint
-                                                        icon={<point.IconComponent size={14} />}
-                                                        text={point.text}
-                                                        confidence={point.confidence}
-                                                        priority={point.priority}
-                                                        onInsert={() => handleInsertSnippet(point.snippet)}
-                                                    />
+                                                    <motion.div
+                                                        onClick={() => handleInsertSnippet(point.snippet)}
+                                                        className={`group cursor-pointer rounded-xl transition-all duration-200 ${
+                                                            point.priority === 'high' 
+                                                                ? `${colors.cardBg} ${colors.border} border hover:${colors.hoverBg} hover:border-emerald-500/50` 
+                                                                : `${colors.cardBg} ${colors.border} border hover:${colors.hoverBg}`
+                                                        }`}
+                                                        whileHover={{ scale: 1.02 }}
+                                                        whileTap={{ scale: 0.98 }}
+                                                    >
+                                                        <div className="p-4">
+                                                            <div className="flex items-start gap-4">
+                                                                <div className={`flex-shrink-0 p-2 rounded-lg transition-all ${
+                                                                    point.priority === 'high' 
+                                                                        ? 'bg-emerald-500/10 text-emerald-400' 
+                                                                        : 'bg-zinc-800 text-zinc-400 group-hover:bg-blue-500 group-hover:text-white'
+                                                                }`}>
+                                                                    <point.IconComponent size={14} />
+                                                                </div>
+                                                                <div className="flex-1 min-w-0">
+                                                                    <div className="flex items-center justify-between mb-2">
+                                                                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                                                                            point.priority === 'high' 
+                                                                                ? 'bg-emerald-500/10 text-emerald-400' 
+                                                                                : point.priority === 'medium'
+                                                                                ? 'bg-blue-500/10 text-blue-400'
+                                                                                : 'bg-zinc-500/10 text-zinc-400'
+                                                                        }`}>
+                                                                            {point.priority.toUpperCase()}
+                                                                        </span>
+                                                                        <div className="flex items-center gap-1">
+                                                                            <Star size={10} className={colors.warning} />
+                                                                            <span className={`text-xs ${colors.textMuted}`}>{point.confidence}%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p className={`${colors.textSecondary} text-sm leading-relaxed group-hover:${colors.text} transition-colors`}>
+                                                                        {point.text}
+                                                                    </p>
+                                                                    <div className="flex items-center justify-between mt-3">
+                                                                        <span className={`text-xs ${colors.textMuted}`}>Click to add to email</span>
+                                                                        <ChevronRight size={12} className={`${colors.textMuted} group-hover:${colors.text} transition-colors`} />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </motion.div>
                                                 </motion.div>
                                             ))}
                                         </div>
@@ -1025,7 +770,48 @@ function App() {
                                     </section>
 
                                     {/* Activity Feed */}
-                                    <ActivityFeed />
+                                    <div className={`${colors.cardBg} rounded-xl p-6 ${colors.border} border`}>
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h3 className={`text-lg font-semibold ${colors.text} flex items-center gap-3`}>
+                                                <Clock size={18} className={colors.primary} />
+                                                Recent Activity
+                                            </h3>
+                                            <button className={`${colors.buttonGhost} p-1 rounded transition-all`}>
+                                                <Eye size={14} />
+                                            </button>
+                                        </div>
+                                        <div className="space-y-4">
+                                            {recentActivity.map((activity, index) => (
+                                                <motion.div
+                                                    key={activity.id}
+                                                    className={`flex items-center gap-4 p-3 rounded-lg ${colors.hoverBg} transition-all cursor-pointer`}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: index * 0.1 }}
+                                                    whileHover={{ scale: 1.02 }}
+                                                >
+                                                    <div className={`p-2 rounded-lg ${
+                                                        activity.type === 'meeting_booked' ? 'bg-emerald-500/10 text-emerald-400' :
+                                                        activity.type === 'reply_received' ? 'bg-blue-500/10 text-blue-400' :
+                                                        'bg-yellow-500/10 text-yellow-400'
+                                                    }`}>
+                                                        {activity.type === 'meeting_booked' ? <Calendar size={14} /> :
+                                                         activity.type === 'reply_received' ? <MessageSquare size={14} /> :
+                                                         <Mail size={14} />}
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <p className={`text-sm font-medium ${colors.text}`}>{activity.prospect}</p>
+                                                        <p className={`text-xs ${colors.textSecondary}`}>{activity.timestamp}</p>
+                                                    </div>
+                                                    <div className={`w-2 h-2 rounded-full ${
+                                                        activity.status === 'success' ? 'bg-emerald-400' :
+                                                        activity.status === 'pending' ? 'bg-yellow-400' :
+                                                        'bg-red-400'
+                                                    }`}></div>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -1044,12 +830,142 @@ function App() {
                             className="h-full"
                         >
                             {isFounderConfirmed ? (
-                                <EmailDisplay 
-                                    email={email} 
-                                    getRenderedEmailBody={getRenderedEmailBody} 
-                                />
+                                <div className="h-full flex flex-col">
+                                    {/* Header */}
+                                    <div className={`${colors.border} border-b p-6 ${colors.cardBg}`}>
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h2 className={`text-2xl font-bold ${colors.text} mb-1`}>{email.subject}</h2>
+                                                <div className={`flex items-center gap-4 text-sm ${colors.textSecondary}`}>
+                                                    <span>To: {FounderDataFinal.name} ({FounderDataFinal.title})</span>
+                                                    <div className="flex items-center gap-1">
+                                                        <Eye size={12} />
+                                                        <span>Preview Mode</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-center gap-2 px-3 py-1 bg-blue-500/10 rounded-full">
+                                                <Brain size={12} className={colors.primary} />
+                                                <span className={`text-xs ${colors.primary} font-medium`}>AI Generated</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Email Content */}
+                                    <div className="flex-1 overflow-y-auto p-8">
+                                        <div className="max-w-4xl mx-auto">
+                                            <motion.div
+                                                className="bg-white text-slate-800 rounded-xl shadow-xl overflow-hidden"
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.2 }}
+                                            >
+                                                <div className="p-8">
+                                                    <div className="whitespace-pre-wrap text-slate-700 leading-relaxed text-lg">
+                                                        {email}
+                                                    </div>
+                                                </div>
+                                                
+                                                <div className="bg-slate-50 px-8 py-4 border-t border-slate-200">
+                                                    <div className="flex items-center justify-between text-sm text-slate-500">
+                                                        <span>Sent via AI Outreach Studio</span>
+                                                        <div className="flex items-center gap-3">
+                                                            <button className="hover:text-slate-700 transition-colors">
+                                                                <Bookmark size={14} />
+                                                            </button>
+                                                            <button className="hover:text-slate-700 transition-colors">
+                                                                <Share2 size={14} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+
+                                    {/* Action Bar */}
+                                    <div className={`${colors.border} border-t ${colors.cardBg} p-6`}>
+                                        <div className="flex items-center justify-between max-w-4xl mx-auto">
+                                            <div className="flex items-center gap-6">
+                                                <div className={`flex items-center gap-2 text-sm ${colors.textSecondary}`}>
+                                                    <MousePointer size={14} />
+                                                    <span>Expected open rate: <span className={colors.success}>74%</span></span>
+                                                </div>
+                                                <div className={`flex items-center gap-2 text-sm ${colors.textSecondary}`}>
+                                                    <Target size={14} />
+                                                    <span>Reply probability: <span className={colors.primary}>28%</span></span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="flex items-center gap-3">
+                                                <motion.button
+                                                    onClick={() => {
+                                                        toast.success("Email copied to clipboard!", { icon: '📋' });
+                                                    }}
+                                                    className={`flex items-center gap-2 px-4 py-2 ${colors.buttonSecondary} text-sm rounded-lg font-medium transition-all`}
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                >
+                                                    <Copy size={14} />
+                                                    Copy
+                                                </motion.button>
+                                                
+                                                <motion.button
+                                                    className={`flex items-center gap-2 px-4 py-2 ${colors.buttonSecondary} text-sm rounded-lg font-medium transition-all`}
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                >
+                                                    <Download size={14} />
+                                                    Export
+                                                </motion.button>
+                                                
+                                                <motion.a
+                                                    className={`flex items-center gap-2 px-6 py-2 ${colors.buttonPrimary} text-sm rounded-lg font-medium transition-all shadow-lg`}
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.98 }}
+                                                >
+                                                    <Send size={14} />
+                                                    Send Email
+                                                </motion.a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             ) : (
-                                <InitialStateDisplay />
+                                <div className="w-full h-full flex flex-col items-center justify-center text-center p-8">
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.6 }}
+                                        className="flex flex-col items-center max-w-lg"
+                                    >
+                                        <div className={`p-8 ${colors.cardBg} rounded-2xl ${colors.border} border mb-8`}>
+                                            <UserCheck size={48} className={colors.primary} />
+                                        </div>
+                                        
+                                        <h2 className={`text-3xl font-bold ${colors.text} mb-4`}>
+                                            Verify Your Prospect
+                                        </h2>
+                                        <p className={`text-lg ${colors.textSecondary} mb-8 leading-relaxed`}>
+                                            Confirm the founder details to unlock AI-powered insights and generate a personalized outreach email that converts.
+                                        </p>
+                                        
+                                        <div className={`flex items-center gap-6 text-sm ${colors.textMuted}`}>
+                                            <div className="flex items-center gap-2">
+                                                <Brain size={16} className={colors.primary} />
+                                                <span>AI Analysis</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Zap size={16} className={colors.warning} />
+                                                <span>Smart Insights</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Target size={16} className={colors.success} />
+                                                <span>High Conversion</span>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </div>
                             )}
                         </motion.div>
                     </AnimatePresence>

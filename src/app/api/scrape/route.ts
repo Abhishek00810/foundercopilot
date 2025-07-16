@@ -39,6 +39,8 @@ Return a single JSON like this:
   "source": "Domain (e.g. linkedin.com)",
   "twitter_or_linkedin": "Wherever they are more active",
   "confidence_reasoning": "Explain why this was the most suitable result."
+}. Don't use anykind of parent JSON above this only provide answer like {
+all the fields that I have given, don't use any external body or name.
 }`
       },
       {
@@ -85,6 +87,7 @@ Return a single JSON like this:
     });
 
   } catch (err: any) {
+    console.log("ey")
     console.error('❌ Error in /api/scrape:', err);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
