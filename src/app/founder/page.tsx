@@ -10,8 +10,11 @@ import {
     Calendar, Eye, MousePointer, Users, ChevronRight, Plus,
     Filter, Download, RefreshCw, Heart, Share2, Bookmark
 } from 'lucide-react';
+import { useRouter } from 'next/navigation'
 
-// ... (all your interfaces and color definitions remain the same)
+import { supabase } from '../lib/supabaseclient'
+
+import {  X, Lock, EyeOff } from 'lucide-react';
 
 const colors = {
     bg: 'bg-black',
@@ -304,47 +307,300 @@ const HomeLoadingScreen = () => {
 
 // ... (keep all other components exactly the same)
 
-const Header = () => (
-    <div className={`fixed top-0 left-0 right-0 z-50 ${colors.bg} ${colors.border} border-b`}>
-        <div className="flex justify-between items-center px-6 py-4">
-            <div className="flex items-center gap-4">
-                <div className={`p-2 ${colors.primaryBg} rounded-lg`}>
-                    <Sparkles size={20} className="text-white" />
-                </div>
-                <div>
-                    <h1 className={`text-xl font-bold ${colors.text}`}>
-                        AI Outreach Studio
-                    </h1>
-                    <p className={`text-xs ${colors.textMuted}`}>Powered by GPT-4</p>
-                </div>
-            </div>
+const Header = () => {
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showSignUpModal, setShowSignUpModal] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [fullname, setFullname] = useState('')
+    const router = useRouter()
+    const [error, setError] = useState<string | null>(null)
 
-            <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-emerald-400 font-medium">Live</span>
-                </div>
-                
-                <button className={`p-2 ${colors.buttonGhost} rounded-lg transition-all`}>
-                    <Settings size={18} />
-                </button>
-                
-                <div className="flex items-center gap-3">
-                    <div className="text-right">
-                        <p className={`text-sm font-medium ${colors.text}`}>{userProfile.name}</p>
-                        <p className={`text-xs ${colors.textSecondary}`}>{userProfile.role}</p>
+    const openLoginModal = () => {
+        setShowSignUpModal(false);
+        setShowLoginModal(true);
+    };
+
+    const openSignUpModal = () => {
+        setShowLoginModal(false);
+        setShowSignUpModal(true);
+    };
+
+    const closeModals = () => {
+        setShowLoginModal(false);
+        setShowSignUpModal(false);
+    };
+
+    const onSignup = async (e: React.FormEvent) => {
+        console.log('submit')
+        e.preventDefault()
+        const { error } = await supabase.auth.signUp({ email, password })
+        if (error) setError(error.message)
+        else router.push('/welcome') // Redirect after signup
+    
+
+      }
+    return (
+        <>
+            <div className={`fixed top-0 left-0 right-0 z-50 ${colors.bg} ${colors.border} border-b backdrop-blur-sm`}>
+                <div className="flex justify-between items-center px-6 py-4">
+                    <div className="flex items-center gap-4">
+                        <div className={`p-2 ${colors.primaryBg} rounded-lg shadow-lg`}>
+                            <Sparkles size={20} className="text-white" />
+                        </div>
+                        <div>
+                            <h1 className={`text-xl font-bold ${colors.text}`}>
+                                AI Outreach Studio
+                            </h1>
+                            <p className={`text-xs ${colors.textMuted}`}>Powered by GPT-4</p>
+                        </div>
                     </div>
-                    <img 
-                        src={userProfile.avatar} 
-                        alt="User avatar" 
-                        className="w-8 h-8 rounded-full object-cover" 
-                    />
+
+                    <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2 px-3 py-1 bg-emerald-500/10 rounded-full">
+                            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                            <span className="text-xs text-emerald-400 font-medium">Live</span>
+                        </div>
+                        
+                        <button className={`p-2 ${colors.buttonGhost} rounded-lg transition-all hover:scale-105`}>
+                            <Settings size={18} />
+                        </button>
+                        
+                        {/* Authentication Buttons */}
+                        <div className="flex items-center gap-3">
+                            <button 
+                                onClick={openLoginModal}
+                                className={`px-4 py-2 text-sm font-medium ${colors.text} hover:${colors.textMuted} transition-all duration-200 hover:scale-105`}
+                            >
+                                Login
+                            </button>
+                            <button 
+                                onClick={openSignUpModal}
+                                className={`px-6 py-2 ${colors.primaryBg} text-white text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105 hover:shadow-lg transform`}
+                            >
+                                Sign Up
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-);
 
+            {/* Login Modal */}
+            {showLoginModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center">
+                    {/* Backdrop */}
+                    <div 
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
+                        onClick={closeModals}
+                    ></div>
+                    
+                    {/* Modal */}
+                    <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-modal-in">
+                        {/* Close Button */}
+                        <button 
+                            onClick={closeModals}
+                            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        {/* Header */}
+                        <div className="p-8 pb-6">
+                            <div className="text-center mb-8">
+                                <div className="mx-auto mb-4 w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                                    <Sparkles size={24} className="text-white" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Welcome Back</h2>
+                                <p className="text-gray-600 dark:text-gray-400">Sign in to your account</p>
+                            </div>
+
+                            {/* Form */}
+                            <form className="space-y-6">
+                                <div className="space-y-4">
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="email"
+                                            placeholder="Email address"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                                        />
+                                    </div>
+                                    
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Password"
+                                            className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <label className="flex items-center">
+                                        <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                                        <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">Remember me</span>
+                                    </label>
+                                    <a href="#" className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                                        Forgot password?
+                                    </a>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:from-blue-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                                >
+                                    Sign In
+                                </button>
+                            </form>
+
+                            <div className="mt-6 text-center">
+                                <p className="text-gray-600 dark:text-gray-400">
+                                    Don't have an account?{' '}
+                                    <button 
+                                        onClick={openSignUpModal}
+                                        className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+                                    >
+                                        Sign up
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Sign Up Modal */}
+            {showSignUpModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center">
+                    {/* Backdrop */}
+                    <div 
+                        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
+                        onClick={closeModals}
+                    ></div>
+                    
+                    {/* Modal */}
+                    <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-modal-in">
+                        {/* Close Button */}
+                        <button 
+                            onClick={closeModals}
+                            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        {/* Header */}
+                        <div className="p-8 pb-6">
+                            <div className="text-center mb-8">
+                                <div className="mx-auto mb-4 w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
+                                    <User size={24} className="text-white" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Create Account</h2>
+                                <p className="text-gray-600 dark:text-gray-400">Join AI Outreach Studio today</p>
+                            </div>
+
+                            {/* Form */}
+                            <form className="space-y-6" onSubmit={onSignup}>
+                                <div className="space-y-4">
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="text"
+                                            placeholder="Full name"
+                                            onChange={(e) => setFullname(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                                        />
+                                    </div>
+
+                                    <div className="relative">
+                                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type="email"
+                                            placeholder="Email address"
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                                        />
+                                    </div>
+                                    
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Password"
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Confirm password"
+                                            className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                        >
+                                            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center">
+                                    <input type="checkbox" className="rounded border-gray-300 text-purple-600 focus:ring-purple-500" />
+                                    <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                                        I agree to the{' '}
+                                        <a href="#" className="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">Terms of Service</a>
+                                        {' '}and{' '}
+                                        <a href="#" className="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300">Privacy Policy</a>
+                                    </span>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-pink-700 transition-all duration-200 transform hover:scale-[1.02] shadow-lg"
+                                >
+                                    Create Account
+                                </button>
+                            </form>
+
+                            <div className="mt-6 text-center">
+                                <p className="text-gray-600 dark:text-gray-400">
+                                    Already have an account?{' '}
+                                    <button 
+                                        onClick={openLoginModal}
+                                        className="text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-300 font-medium"
+                                    >
+                                        Sign in
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
+};
 // ... (keep all other components: ActivityFeed, FounderVerification, etc.)
 
 // Main App Component with proper API integration
