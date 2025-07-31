@@ -52,6 +52,11 @@ type HeaderProps = {
 };
 
 export const Header = ({ isLoggedIn, user }: HeaderProps) => {
+    useEffect(()=>{
+        console.log({
+            isLoggedIn, user
+        })
+    })
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
