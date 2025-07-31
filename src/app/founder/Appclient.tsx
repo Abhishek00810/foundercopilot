@@ -169,6 +169,7 @@ export function AppClient({ serverSession }: { serverSession: Session | null }) 
                     },
                     body: JSON.stringify({
                         company: 'Notion', // This should come from URL params or props
+                        UserName: serverSession?.user ?? null
                     }),
                 });
 
@@ -213,15 +214,17 @@ export function AppClient({ serverSession }: { serverSession: Session | null }) 
 
 
     const onConfirmfounder = async () => {
+        console.log("hey")
+        console.log("user", 'Google');
         const res = await fetch('/api/coldmail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                company: 'Notion', // This should come from URL params or props
+                company: 'Google', // This should come from URL params or props
                 founder: FounderDataFinal?.name,
-                UserName: serverSession?.user ?? null
+                user: serverSession?.user.user_metadata.full_name ?? null
             }),
         });
         const data = await res.json();
@@ -246,34 +249,24 @@ export function AppClient({ serverSession }: { serverSession: Session | null }) 
     };
 
     const handleRegenerate = async () => {
-        setLoading(true);
-        toast.loading("AI is crafting a new version...", { id: 'regen' });
-
-        await new Promise(r => setTimeout(r, 2000));
-
-        const variations = [
-            {
-                subject: "Partnership opportunity for {companyName}",
-                body: `Hi {firstName},\n\nJust learned about {companyName}'s recent success - what an incredible milestone!\n\nI work with fast-scaling companies to implement enterprise-grade security frameworks that grow with your team.\n\nGiven your rapid expansion, I think there's a meaningful opportunity to discuss.\n\nInterested in a quick call?\n\n{[Signature]}`
+        console.log("hey")
+        console.log("user", 'Google');
+        const res = await fetch('/api/coldmail', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            {
-                subject: "Scaling challenges at {companyName}?",
-                body: `Hi {firstName},\n\nImpressive work at {companyName} - your approach to development is exactly what the industry needs.\n\nAs you scale, I imagine code review and deployment security are becoming critical bottlenecks.\n\nI help companies like yours automate these processes without slowing down innovation.\n\nWorth a 15-minute conversation?\n\n{[Signature]}`
-            }
-        ];
-
-        const randomVariation = variations[Math.floor(Math.random() * variations.length)];
-        setEmail(randomVariation);
-        setLoading(false);
-        toast.success("New email generated!", {
-            id: 'regen',
-            icon: '🎯',
-            style: {
-                background: '#0a0a0a',
-                color: 'white',
-                border: '1px solid #27272a'
-            }
+            body: JSON.stringify({
+                company: 'Google', // This should come from URL params or props
+                founder: FounderDataFinal?.name,
+                user: serverSession?.user.user_metadata.full_name ?? null
+            }),
         });
+        const data = await res.json();
+        console.log(data.result)
+        setEmail(data.result)
+
+        setIsFounderConfirmed(true);
     };
 
     // Show loading screen

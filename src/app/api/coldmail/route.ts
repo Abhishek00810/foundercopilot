@@ -3,8 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { company, founder } = body;
-    console.log({company, founder})
+    const { company, founder, user } = body;
     const messages = [
       {
         role: 'system',
@@ -21,12 +20,13 @@ export async function POST(req: Request) {
     - Offer a brief idea, value insight, or suggestion.
     - End with a soft CTA like “open to a quick chat?” or “would love to hear your thoughts.”
     
-    Return the email only — no formatting, no markdown, no JSON.
+    Return the email only — no formatting, no markdown, no JSON. I have provided UserName on the behalf of which you wil make this email.
+    Make this email natural looking and should not be too professional.
     `
       },
       {
         role: 'user',
-        content: `Founder: ${founder}\nCompany: ${company}`
+        content: `UserName: ${user}\nFounder: ${founder}\nCompany: ${company}`
       }
     ];
     

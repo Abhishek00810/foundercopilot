@@ -3,6 +3,7 @@ import { getFounderFromSerpAPI } from '@/app/lib/scraper';
 import { scraper_dev } from '@/app/lib/scraper_dev';
 
 export async function POST(req: Request) {
+
   try {
     const company = 'Notion';
     if (!company) {
